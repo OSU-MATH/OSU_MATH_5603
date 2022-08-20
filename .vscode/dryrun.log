@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/mnt/c/work/osu/OSU_NumericalLinearAlgebraFortranCode.new'
+make: Leaving directory '/mnt/c/work/osu/OSU_NumericalLinearAlgebraFortranCode.new'
+ 
+Makefile:8: *** missing separator.  Stop.
+

@@ -105,7 +105,10 @@ for i=1:M
     A(G1, G2) = B_1 < p_Inbetween;
     A = triu(A,1);
     A = A + A';
-    L2=laplacian(A);
+    
+    L2=laplacian(graph(A));
+    L2s = laplacian_xrx(A);%same!
+    
     sigma=eig(L2);
     gap = sigma(2)-sigma(1);
     spy(A);
@@ -117,8 +120,8 @@ for i=1:M
     print('-djpeg','-r600', ['./results/G_P1_',sprintf('%f',p_G1),'_P2_',sprintf('%f',p_G2),'_crosstalk_',sprintf('%f',p_Inbetween),'_gap_',sprintf('%f',gap),'.jpg'] );
     close gcf;
     
-    L_G1 = laplacian(A(1:gs, 1:gs))
-    L_G2=laplacian(A(gs+1:2*gs, gs+1:2*gs))
+    L_G1 = laplacian(graph(A(1:gs, 1:gs)))
+    L_G2=laplacian(graph(A(gs+1:2*gs, gs+1:2*gs)))
     sigmaG1 = eig(L_G1)
     sigmaG2 = eig(L_G2)            
     sigmaX = [sigmaG1;sigmaG2]
@@ -136,8 +139,8 @@ for i=1:M
     xp2(i)=p_G2;
     xcrosstalk(i)=p_Inbetween;
     xgap(i)=gap;
-    xcond1(i)=cond(laplacian(A(1:gs, 1:gs)));
-    xcond2(i)=cond(laplacian(A(gs+1:2*gs, gs+1:2*gs)));
+    xcond1(i)=cond(laplacian(graph(A(1:gs, 1:gs))));
+    xcond2(i)=cond(laplacian(graph(A(gs+1:2*gs, gs+1:2*gs))));
     xcond12(i)=cond(L2); 
 
 end

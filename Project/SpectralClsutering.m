@@ -149,11 +149,11 @@ close gcf;
 
 
 [V,D] = eigs(L2,16,'SA');
-figure ; plot(sort(V(:,1)), 'c');hold on;
+figure ;;set(gcf,'color','w'); plot(sort(V(:,1)), 'c');hold on;
 plot(sort(V(:,2)), 'b');
 plot(sort(V(:,3)), 'r');
 plot(sort(V(:,4)), 'g');
 title('First Four Eigenvectors of Graph Laplacian')
-legend('EV 0','EV1','EV 2','EV 3');
-print('-dpng','-r600', ['./results/ev_cond.png'] );
+legend('EV 0','EV1','EV 2','EV 3',Location='southeast');
+print('-dpng','-r600', ['./results/eigenvecs.png'] );
 close gcf;

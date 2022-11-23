@@ -66,11 +66,9 @@ Consider the case that we have $l$ classes which are completely dissimilar. If o
 
 Before we introduce our data sets and analysis results it's worth mentioning an important relationship between $G=(E,V)$ and $A$.  If we specify a random walk on $V$ with probabilities $A_{u,v}$, then the mixing time of this random walk is related to the second eigenvalue governs the mixing time.  We can imagine the amount of cross talk is the measure of mixing between classes. One of our aims is to demonstrate this experimentally. 
 
-\section*{Experimental Results}
-
 \includegraphics[width=6in,height=6in]{images/2class_gap.png}
 
-In the figure above we have collected a few examples of a two class scenario.  We plotted $\mathcal{L}$, $G$, and the last row is the 2 spectra of the diagonal blocks in red aligned to the spectrum of the full matrix in blue.  
+In the figure above we have collected a few examples of a two class scenario.  We plotted $\mathcal{L}$, $G$, and the last row is the 2 spectra of the diagonal blocks in red aligned to the spectrum of the full matrix in blue.  The data above for the adjacency matrices $A$ is generated randomly see our Matlab code \cite{git_repository}.  
 
 Remember $\mathcal{L}$ is singular with eigenvector $T^{\frac{1}{2}} 1$.  This is also true for the block diagonal components.  We see good agreement on the spectrum being the union of the components of the blocks when there is no to little crosstalk. On the far right, the union of the spectrum of diagonal blocks is starting to diverge from the spectrum of the full matrix.  This is interesting.  We calculated the eigengap between 0 and the first non-zero eigenvalue for these Laplacians
 
@@ -92,6 +90,34 @@ crosstalk probability & eigengap             \\
 \end{table}
 
 We see the relationship between the crosstalk and the eigengap makes intuitive sense and is consistent with the Markov chain interpretation of $A$.  As crosstalk increases we see from the graphs above that the random walk on vertices will be able to cross to other clusters.  The more cross talk, the more mixing, and thus the faster convergence to stationarity. 
+
+Next we take a synthetic data set through the spectral clustering process up to the calculations of the eigenvalues and eigenvectors. Again see our github repository for the code to replicate the figures and data. 
+
+\includegraphics[width=5in,height=4in]{images/4class.png}
+This data was designed to have both noise (outliers) and true crosstalk. The data is a sample from a mixture of four bivariate random normal variables.  Data is not usually given to us in such a nice organized format. To convince ourselves of the utility of the approach in the code we rotate the data in a random direction, and we permute both the rows and columns randomly. The effect of this on the adjacency matrix is below. 
+
+\includegraphics[width=3in,height=3in]{images/spy.png}
+\includegraphics[width=3in,height=3in]{images/spy_randomized.png}
+Data analyzed in practice usually arrives out of order, and with no indications which are the important directions. Spectral clustering can help identify underlying hidden structure.  Our data is 2 dimensional but the technique works well in high dimensions.  
+
+We chose to use a nearest neighbor approach for calculating $A$. We experimented with using the Gram matrix $X^T X$ and an adaptive approach based on neighborhoods that provides more connections where the data is more dense and got similar results. Below are the first few eigenvectors for the graph Laplacian of our synthetic data.  
+
+\includegraphics[width=3in,height=3in]{images/eigenvecs.png}
+
+We see the values of the eigenvectors capture the differences in classes nicely. The same diagram is presented for the two class data that has a low crosstalk. We see the second eigenvector separates the data based on sign alone.  
+
+\includegraphics[width=3in,height=3in]{images/EigenVectors_P1_0.100000_P2_0.200000_crosstalk_0.010000_gap_2.329507.jpg}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

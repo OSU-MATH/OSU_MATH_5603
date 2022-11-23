@@ -134,6 +134,23 @@ for i=1:M
     %plot(sigmaSVD,"Color",'greep','Marker','square')
     print('-djpeg','-r600', ['./results/Spectrum_P1_',sprintf('%f',p_G1),'_P2_',sprintf('%f',p_G2),'_crosstalk_',sprintf('%f',p_Inbetween),'_gap_',sprintf('%f',gap),'.jpg'] );
     close gcf;
+    
+    L2=laplacian_xrx(A);
+    [V,D] = eigs(L2,16,'SA');
+    figure ; plot(sort(V(:,1)), 'c');hold on;
+    plot(sort(V(:,2)), 'b');
+    plot(sort(V(:,3)), 'r');
+    plot(sort(V(:,4)), 'g');
+    title('First Four Eigenvectors of Graph Laplacian')
+    legend('EV 0','EV1','EV 2','EV 3');
+    print('-djpeg','-r600', ['./results/EigenVectors_P1_',sprintf('%f',p_G1),'_P2_',sprintf('%f',p_G2),'_crosstalk_',sprintf('%f',p_Inbetween),'_gap_',sprintf('%f',gap),'.jpg'] );
+    close gcf;
+
+    s = condeig(L2);
+    plot(s)
+    title('Eigenvalue condition number')
+    print('-djpeg','-r600', ['./results/EV_cond_P1_',sprintf('%f',p_G1),'_P2_',sprintf('%f',p_G2),'_crosstalk_',sprintf('%f',p_Inbetween),'_gap_',sprintf('%f',gap),'.jpg'] );
+    close gcf;
    
     xp1(i)=p_G1;
     xp2(i)=p_G2;

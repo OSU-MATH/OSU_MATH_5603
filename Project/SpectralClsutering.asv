@@ -55,6 +55,25 @@ quiver(mu4(1),mu4(2) ,covX4(1,2),covX4(2,2),'r');
 print('-dpng','-r600', ['./results/4class.png'] );
 close gcf;
 
+
+G_knn = knngraph( X,3);
+A_knn = adjacency(G_knn,'weighted');
+figure;set(gcf,'color','w');
+spy(A_knn)
+print('-dpng','-r600', ['./results/SpyStructure.png'] );
+close gcf;
+
+
+
+
+G = graph(A)
+D = diag(degree(G));
+L= laplacian(G);
+plot(G)
+
+
+
+
 % --------------------------------Rotate data and permute columns and rows
 
 [Q,~]=qr(randn(2));

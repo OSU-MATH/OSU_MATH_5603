@@ -1,19 +1,10 @@
-\section*{Spectral Methods in Data Science}
 
-There are lots of applications of Numerical Linear Algebra in data science. One could easily make the case that the Singular Value Decomposition (SVD) and iterative eigensolvers are some of the most important algorithms in industry. Principal Component Analysis (PCA) is one of the most common spectral methods in data science; using the SVD to resolve important directions in data space that have the most variance. PCA is useful if the variance describes something were interested in, as it can tell us what that direction is and provide a transformation of the data to a low dimensional space.   
+\section*{Spectral Clustering}
 
-In this paper we are going to explore some of the applications of eigensolver algorithms to a particular type of clustering algorithm in data science called spectral clustering. The idea behind spectral clustering is to transform a data set with $n$ samples and $m$ features, $X \in \dblr^{n,m}$ to a graph that we can operate on to resolve different clusters in the data. 
-
-The rest of this paper is organized as follows
-\begin{itemize}
-\setlength\itemsep{-0.5em}
-    \item {Definitions}
-    \item {Overview of Spectral Clustering}
-    \item {Observations from clustering synthetic data}
-\end{itemize}
+There are many applications of Numerical Linear Algebra in data science. One could make the case that the Singular Value Decomposition (SVD) and iterative eigensolvers are among the most important algorithms in statistics and  data science. Methods to resolve aspects of data using the SVD and eigensolvers are called spectral methods. For example Principal Component Analysis (PCA) -  a common spectral method in data science - uses the SVD to resolve important directions in data space that have the most variance. PCA is useful if the variance describes something were interested in, as it can tell us what that direction is and provide a transformation of the data to a low dimensional space.  In this work we are going to explore some of the applications of eigensolver algorithms to a particular type of clustering algorithm in data science called spectral clustering. The idea behind spectral clustering is to transform a data set with $n$ samples and $m$ features, $X \in \dblr^{n,m}$ to a graph that we can operate on to resolve different clusters in the data.  
 
 \section*{Definitions}
-We try to keep with these conventions in our code as well. Let $X \in \dblr^{n,m}$ be our data set.  $G$, a graph is a collection of edges and vertices $(G=(E,V)$. $u \; v$ are edges and if they are connected we write $u \sim v$ We write $|V|$ , $|E|$ for the number of vertices and edges respectively. $A \in \dblr^{|V| \times |V| }$ is a graph adjacency matrix; $A_{u,v} = 1 : u \sim v$. $\rho(x_i,x_j)$ will denote a metric or similarity function. We write $K_{\rho}(x_i,x_j)$ for the similarity matrix induced by the similarity measure $\rho$. Sometimes we don't distinguish between $K$ and $A$.  Indeed, if $A$ is the complete graph and it's a weighted graph weighted by similarity - then $K=A$.  Lastly we'll be dealing with diagonal matrices of degree or weight sums - we denote $d_v$ to be the degree of $v$ in the unweighted case or the sum of the sum of the weights $d_v = \sum_{u} K(x_v,x_u)$  in the weighted case.   
+Let $X \in \dblr^{n,m}$ be our data set.  $G$, a graph is a collection of edges and vertices $(G=(E,V)$. $u \; v$ are edges and if they are connected we write $u \sim v$ We write $|V|$ , $|E|$ for the number of vertices and edges respectively. $A \in \dblr^{|V| \times |V| }$ is a graph adjacency matrix; $A_{u,v} = 1 : u \sim v$. $\rho(x_i,x_j)$ will denote a metric or similarity function. We write $K_{\rho}(x_i,x_j)$ for the similarity matrix induced by the similarity measure $\rho$. Sometimes we don't distinguish between $K$ and $A$.  Indeed, if $A$ is the complete graph and it's a weighted graph weighted by similarity - then $K=A$.  Lastly we'll be dealing with diagonal matrices of degree or weight sums - we denote $d_v$ to be the degree of $v$ in the unweighted case or the sum of the sum of the weights $d_v = \sum_{u} K(x_v,x_u)$  in the weighted case.   
 
 \section*{Overview of Spectral Clustering}
 
@@ -23,7 +14,7 @@ There are two key ingredients to forming the affinity matrix; a distance functio
 
 Spectral graph theory takes lots of insights from geometry.  Discrete analogues of isoperimetry results and heat flow on manifolds are just a few examples.  The normalized graph Laplacian is used to aid in consistency between spectral geometry and stochastic processes.  The best reference for background material is \cite{chung1997spectral}. 
 
-We generally consider connected graphs $G = (E,V)$ in this work, in which case we can define the normalized graph Laplacian as $\mathcal{L} = T^{\frac{1}{2}} L T^{\frac{-1}{2}} = I - T^{\frac{1}{2}} A T^{-\frac{1}{2}}$, where $A$ is the adjacency matrix, $L$ is defined by
+We generally consider connected graphs $G = (E,V)$ in this work, in which case we can define the normalized graph Laplacian as $\mathcal{L} = D^{\frac{1}{2}} L D^{\frac{-1}{2}} = I - D^{\frac{1}{2}} A D^{-\frac{1}{2}}$, where $A$ is the adjacency matrix, $L$ is defined by
 
 \begin{equation*}
 L(u,v)  = \Biggl\{
@@ -32,7 +23,7 @@ L(u,v)  = \Biggl\{
  -1  & : u\sim v  \\
  0   & : u \nsim v  \end{array}
 \end{equation*} and
-$T = diag\{d_1, \cdots , d_n\}$ where $d_v$ is the degree of vertex $v$ or the sum of weights as described above.
+$D = diag\{d_1, \cdots , d_n\}$ where $d_v$ is the degree of vertex $v$ or the sum of weights as described above.
 
 $\mathcal{L}$ is a difference operator on the space of functions $g \in \dblr^{|V|}$
 
@@ -46,11 +37,11 @@ Vol (G) = \sum\limits_{v \in V}^{d_v} = Tr(T) \\
 ker ( \mathcal{L} ) = span\{ T^{\frac{1}{2}} 1 \}
 \end{eqnarray}
 
-This is the same difference operator ( up to the scaling by T ) that describes the coupled mass spring system.  It is the discrete analog of the continuous Laplacian $\Delta f=\sum_{i=1}^n \frac{\partial^2 f}{\partial x_i^2}$ which has eigenfunctions $f(x)=e^{j n x}$ We know from PDE's that the boundary of the domain of the operator determines it's fundamental modes.  This is still the case in the discrete setting. We'll see below that the graph Laplacian has eigenvectors that correspond to high and low frequencies. 
+This is the same difference operator ( up to the scaling by $D$ ) that describes the coupled mass spring system.  It is the discrete analog of the continuous Laplacian $\Delta f=\sum_{i=1}^n \frac{\partial^2 f}{\partial x_i^2}$ which has eigenfunctions $f(x)=e^{j n x}$ We know from PDE's that the boundary of the domain of the operator determines it's fundamental modes.  This is still the case in the discrete setting. We'll see below that the graph Laplacian has eigenvectors that correspond to high and low frequencies. 
 
-There are many nice properties of the Laplacian matrix. It's symmetric, positive semi-definite and diagonally dominant. The implications of which are that the eigenvalues are real and non negative. When a matrix has a large condition number it can be pre-conditioned for better performance in solvers, particularly for iterative solvers. The multiplication of $L$ on the left and right by $T$ might be seen as a form of Jacobi (diagonal) pre-conditioning. We know the matrix is singular, but it might help with eigenvalue condition numbers. We perform some experiments below to investigate this. 
+There are many nice properties of the Laplacian matrix. It's symmetric, positive semi-definite and diagonally dominant. The implications of which are that the eigenvalues are real and non negative. 
 
-Notice we have defined a discrete version of the traditional Laplacian.  There are many interesting comparisons between the discrete setting and continuous geometry. We will see later, the data set we analyze has been prepared to mirror the setting of heat conduction and capture some of the aspects of isoperimetry.
+We have defined a discrete version of the traditional Laplacian.  There are many interesting comparisons between the discrete setting and continuous geometry. We will see later, the data set we analyze has been prepared to mirror the setting of heat conduction and capture some of the aspects of isoperimetry.
 
 We can now describe the basic steps of spectral clustering.  We stick with the method defined in \cite{NIPS2001_801272ee}
 
@@ -89,31 +80,35 @@ crosstalk probability & eigengap             \\
 \end{tabular}
 \end{table}
 
-We see the relationship between the crosstalk and the eigengap makes intuitive sense and is consistent with the Markov chain interpretation of $A$.  As crosstalk increases we see from the graphs above that the random walk on vertices will be able to cross to other clusters.  The more cross talk, the more mixing, and thus the faster convergence to stationarity. 
+We see the relationship between the cross-talk and the eigengap makes intuitive sense and is consistent with the Markov chain interpretation of $A$.  As cross-talk increases we see from the graphs above that the random walk on vertices will be able to cross to other clusters.  The more cross talk, the more mixing, and thus the faster convergence to stationarity. 
 
-Next we take a synthetic data set through the spectral clustering process up to the calculations of the eigenvalues and eigenvectors. Again see our github repository for the code to replicate the figures and data. 
+Next we take a synthetic data set through the spectral clustering process up to the calculations of the eigenvalues and eigenvectors. Again see our GitHub repository for the code to replicate the figures and data. 
 
 \includegraphics[width=5in,height=4in]{images/4class.png}
-This data was designed to have both noise (outliers) and true crosstalk. The data is a sample from a mixture of four bivariate random normal variables.  Data is not usually given to us in such a nice organized format. To convince ourselves of the utility of the approach in the code we rotate the data in a random direction, and we permute both the rows and columns randomly. The effect of this on the adjacency matrix is below. 
+
+This data was designed to have both noise (outliers) and true cross-talk. The data is a sample from a mixture of four bi-variate random normal variables.  Data is not usually given to us in such a nice organized format. To convince ourselves of the utility of the approach in the code we rotate the data in a random direction, and we permute both the rows and columns randomly. The effect of this on the adjacency matrix is below. 
 
 \includegraphics[width=3in,height=3in]{images/spy.png}
 \includegraphics[width=3in,height=3in]{images/spy_randomized.png}
+
 Data analyzed in practice usually arrives out of order, and with no indications which are the important directions. Spectral clustering can help identify underlying hidden structure.  Our data is 2 dimensional but the technique works well in high dimensions.  
 
 We chose to use a nearest neighbor approach for calculating $A$. We experimented with using the Gram matrix $X^T X$ and an adaptive approach based on neighborhoods that provides more connections where the data is more dense and got similar results. Below are the first few eigenvectors for the graph Laplacian of our synthetic data.  
 
+We see the values of the eigenvectors capture the differences in classes nicely. The same diagram is presented for the two class data that has a low cross-talk. We see the second eigenvector separates the data based on sign alone. 
+
+For all the matrices involved we calculated the matrix and eigenvalue condition numbers. Being singular - the matrix condition numbers were very high. The eigenvalue condition numbers for the graph Laplacian were low regardless of the method used to calculate the affinity matrix or which Laplacian was used.  
+
 \includegraphics[width=3in,height=3in]{images/eigenvecs.png}
 
-We see the values of the eigenvectors capture the differences in classes nicely. The same diagram is presented for the two class data that has a low crosstalk. We see the second eigenvector separates the data based on sign alone.  
+There is a lot of interesting literature extending these methods and investigating convergence properties \cite{alee_wasserman} \cite{BELKIN20081289}. We experimented with the diffusion map algorithm of \cite{coifman2005geometric} on a data set modified with one extra direction to capture a response. Diffusion maps take the approach of running a diffusion on the data to extract a non linear low dimensional embedding for the data that captures the low dimensional geometry. The plot on the right is the low dimensional embedding of the data painted with the cluster memberships. 
 
-\includegraphics[width=3in,height=3in]{images/EigenVectors_P1_0.100000_P2_0.200000_crosstalk_0.010000_gap_2.329507.jpg}
+\includegraphics[width=3in,height=3in]{images/3ddata.png}
+\includegraphics[width=3in,height=3in]{images/diffusion_maps.png}
 
+The steps to calculate Diffusion Maps are very similar to those of spectral clustering but reply on local kernel approaches we touched upon and have nice theoretical properties.  The approach takes into account the density of data when calculating $L$. 
 
-
-
-
-
-
+We've seen that the eigenvectors of a graph Laplacian calculated from an affinity matrix of similarities can reveal hidden structure in data. This approach to data analysis has many interesting theoretical connections to geometry, probability, and functional analysis. 
 
 
 

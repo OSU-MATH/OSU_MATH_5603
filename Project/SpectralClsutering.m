@@ -69,15 +69,6 @@ M=sz(1,2)
 P_col = eye(M);
 P_col = P_col(randperm(M),:);
 
-%Just Permute
-X_p =P_rows* ( X  ) *P_col'
-figure;set(gcf,'color','w');
-G_knn = knngraph( X_p,8);
-A_knn = adjacency(G_knn,'weighted');
-spy(A_knn)
-print('-dpng','-r600', ['./results/XPermuted-SpyStructure.png'] );
-close gcf;
-
 %X is now rotated and permuted by both by cols and rows 
 X =P_rows* ( X * Q ) *P_col'
 
@@ -87,7 +78,6 @@ A_knn = adjacency(G_knn,'weighted');
 spy(A_knn)
 print('-dpng','-r600', ['./results/XRotatedPermutedSpyStructure.png'] );
 close gcf;
-
 
 A_knn = full(A_knn);
 L2=laplacian_xrx(A_knn);
